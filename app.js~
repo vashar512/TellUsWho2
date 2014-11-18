@@ -8,8 +8,8 @@ var path = require('path');
 var mongoose = require('mongoose');
 var config = require('./oauth.js');
 var passport = require('passport');
-//var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var fbFriendsList; //Save fbFriendsList into here
 
 passport.serializeUser(function(user, done) {
 	done(null, user.id);
@@ -20,30 +20,22 @@ passport.deserializeUser(function(obj, done) {
 });
 
 
-//config
-/*
-var FacebookUserSchema = new mongoose.Schema({
-	fbId: String,
-	email: { type: String, lowercase: true },
+//mongodb conig
+mongoose.connect('mongodb://localhost/passport-example');
+
+//create user model
+var User = mongoose.model('User', {
+	oauthID: Number,
 	name: String
 });
-var FbUsers = mongoose.model('fbs', FacebookUserSchema);
 
-passport.use(new LocalStrategy(function(username, password, done){
-	Users.findOne({ username: username}, function(err, user){
-		if(err) { return done(err); }
-		if(!user) {
-			return done(null, false, { message: 'Incorrect Username.' });
-		}
-
-		hash( password, user.salt, function(err, hash) {
-			if(err) { return done(err); }
-			if(hash == user.hash) return done(null, user);
-			done(null, false, { message: 'Incorrect Password' });
-		});
-	});
-}));
-*/
+var Friend = mongoose.model('Friends', {
+	fbUniqueID: String,
+	name: String,
+	picture: String,
+	userOauthID: Number,
+	userName: String
+});
 
 passport.use(new FacebookStrategy({
 	clientID: config.facebook.clientID,
@@ -51,42 +43,24 @@ passport.use(new FacebookStrategy({
 	callbackURL: config.facebook.callbackURL
 },
 function(accessToken, refreshToken, profile, done) {
-/*	FbUsers.findOne({fbId:profile.id}, function(err, olduser) {
-		if(oldUser){
-			done(null, oldUser);
-		} else {
-			var newUser = new FbUsers({ 
-				fbId : profile.id,
-				email: profile.emails[0].value,
-				name : profile.displayName
-			}).save(function(err,newUser){
-				if(err) throw err;
-				done(null, newUser);
-			});
-		}	
-	});	*/
-//console.log(">>USER PROFILE PROFILE " + JSON.stringify(profile, null, 2));
-		var fbReq = https.request({
+	//Getting Friends List for User
+	var fbReq = https.request({
 		hostname: 'graph.facebook.com',
 		method: 'GET',
 		path: '/v2.0/me/taggable_friends?access_token=' + accessToken
 	}, function(fbRes) {
 		var output = '';
-		//console.log(">>Output 1 " + output);
 		fbRes.setEncoding('utf8');
-		//console.log(">>Log the data");
-		
 		fbRes.on('data', function(chunk) {
-			//console.log(">>Length of data " + chunk.length);
 			output += chunk;
-			//console.log(">>Output " + output);
 		});
 
 		fbRes.on('end', function() {
-		    console.log(">>Output: " + output);			
-		    //return res.render('/account', {data: output});
+			fbFriendsList = JSON.parse(output);	
+			for(friend in fbFriendsList.data) {
+				addFriends(fbFriendsList, friend);    
+			}
 		});
-		//console.log(">>Output 2 " + output);
 	});
 
 	fbReq.on('error', function(err) {
@@ -94,6 +68,52 @@ function(accessToken, refreshToken, profile, done) {
 	});
 
 	fbReq.end();
+	//End Request to get Friends
+
+	//Save user and friends in db
+	User.findOne({oauthID:profile.id}, function(err, existingUser) {
+		if(err) { console.log(err); }		
+		if(!err && existingUser != null){
+			done(null, existingUser);
+		} else {
+			var newUser = new User({ 
+				oauthID : profile.id,
+				name : profile.displayName
+			}).save(function(err){
+				if(err) {
+					console.log(">>Error saving new user to DB " + err);
+				} else {
+					console.log(">>Successfully added new user");
+					done(null, newUser);
+				}
+			});
+		}
+	});
+	
+	function addFriends(fbFriendsList, index) {	
+		Friend.findOne({fbUniqueID:fbFriendsList.data[index].id, name:fbFriendsList.data[index].name, picture:fbFriendsList.data[index].picture.data.url}, function(err, existingUser) {
+			if(err) { console.log(err); }
+			if(!err && existingUser != null) {
+				console.log(">>>>>>>>>>>>>>>>>> Existing User");
+				//Deduping will happen here
+				done(null, existingUser);
+			} else {
+				var newFriend = new Friend({
+				fbUniqueID : fbFriendsList.data[index].id,
+				name : fbFriendsList.data[index].name,
+	   			picture : fbFriendsList.data[index].picture.data.url,
+				userOauthID : profile.id,
+				userName : profile.displayName
+				}).save(function(err) {
+					if(err) {
+						console.log(">>Error saving new friend to DB " + err);
+					} else {
+						//done(null, newFriend);
+	 				}
+				});
+			}
+		});
+	}
 
 	process.nextTick(function() {
 		return done(null, profile);
@@ -112,7 +132,7 @@ app.use(express.favicon());
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.session({secret:'dog', cookie:{maxAge:100000}}));
+app.use(express.session({secret:'dog'}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);
@@ -126,23 +146,6 @@ app.configure('development', function(){
 app.configure('production', function(){
     app.use(express.errorHandler());
 });
-
-/*
-app.configure(function() {
-	app.set('views', path.join(__dirname, 'views'));
-	app.set('view engine', 'jade');
-	//app.use(express.logger());
-	app.use(express.cookieParser());
-	app.use(express.bodyParser());
-	app.use(express.session({ secret: 'my_precious' }));
-	app.use(passport.initialize());
-	app.use(passport.session());
-	app.use(express.static(__dirname + '/public'));	
-	//app.use(express.methodOverride());
-	app.use(app.router);
-	
-});
-*/
 
 /*
 // mongo config
@@ -160,18 +163,17 @@ app.get('/ping', routes.ping);
 app.get('/account', ensureAuthenticated, function(req, res) {
 	res.render('account', { user: req.user });
 });
-app.get('/', function(req, res) {
-	res.render('login', { user: req.user });
-});
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['user_friends', ]}), function(req, res){});
+/*app.get('/', function(req, res) {
+	//res.render('login', { user: req.user });
+});*/
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['user_friends']}), function(req, res){});
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), function(req, res){
 	res.redirect('/account');
 });
 app.get('/logout', function(req, res) {
-	req.session.destroy( function (){ res.redirect('/'); });
-	//req.session.save();
-	//req.logout();
-	//res.redirect('/');
+	req.logout();	
+	//req.session.destroy( function (){ res.redirect('/'); });
+	res.redirect('/');	
 });
 
 // run server
