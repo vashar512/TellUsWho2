@@ -64,7 +64,7 @@ function(accessToken, refreshToken, profile, done) {
 	});
 
 	fbReq.on('error', function(err) {
-		console.log(">>Error: " + err);
+		//console.log(">>Error: " + err);
 	});
 
 	fbReq.end();
@@ -72,7 +72,8 @@ function(accessToken, refreshToken, profile, done) {
 
 	//Save user and friends in db
 	User.findOne({oauthID:profile.id}, function(err, existingUser) {
-		if(err) { console.log(err); }		
+		if(err) { //console.log(err); 
+		}		
 		if(!err && existingUser != null){
 			done(null, existingUser);
 		} else {
@@ -81,10 +82,10 @@ function(accessToken, refreshToken, profile, done) {
 				name : profile.displayName
 			}).save(function(err){
 				if(err) {
-					console.log(">>Error saving new user to DB " + err);
+					//console.log(">>Error saving new user to DB " + err);
 				} else {
-					console.log(">>Successfully added new user");
-					done(null, newUser);
+					//console.log(">>Successfully added new user");
+					//done(null, newUser);
 				}
 			});
 		}
@@ -92,11 +93,12 @@ function(accessToken, refreshToken, profile, done) {
 	
 	function addFriends(fbFriendsList, index) {	
 		Friend.findOne({name:fbFriendsList.data[index].name, picture:fbFriendsList.data[index].picture.data.url}, function(err, existingUser) {
-			if(err) { console.log(err); }
+			if(err) { //console.log(err); 
+}
 			if(!err && existingUser != null) {
-				console.log(">>>>>>>>>>>>>>>>>> Existing User");
+				//console.log(">>>>>>>>>>>>>>>>>> Existing friend");
 				//Deduping will happen here
-				done(null, existingUser);
+				//done(null, existingUser);
 			} else {
 				var newFriend = new Friend({
 				fbUniqueID : fbFriendsList.data[index].id,
@@ -106,9 +108,9 @@ function(accessToken, refreshToken, profile, done) {
 				userName : profile.displayName
 				}).save(function(err) {
 					if(err) {
-						console.log(">>Error saving new friend to DB " + err);
+
 					} else {
-						//done(null, newFriend);
+					
 	 				}
 				});
 			}
@@ -124,7 +126,7 @@ function(accessToken, refreshToken, profile, done) {
 
 // global config
 var app = express();
-app.set('port', process.env.PORT || 1337);
+app.set('port', process.env.PORT || 1994);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.logger());
@@ -161,8 +163,19 @@ mongoose.connect(mongo);
 app.get('/', routes.index);
 app.get('/ping', routes.ping);
 app.get('/account', ensureAuthenticated, function(req, res) {
-	res.render('account', { user: req.user });
+	res.render('account', { user: req.user});
 });
+
+app.get('/:id/friends', ensureAuthenticated, function(req, res) {
+	 Friend.find({userOauthID: req.params.id}, function(err, friends) {
+		res.render('friends', {
+		title: 'Your Friends',
+		friends: friends
+		});
+	});
+});
+
+
 /*app.get('/', function(req, res) {
 	//res.render('login', { user: req.user });
 });*/
