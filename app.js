@@ -163,12 +163,12 @@ mongoose.connect(mongo);
 app.get('/', routes.index);
 app.get('/ping', routes.ping);
 app.get('/account', ensureAuthenticated, function(req, res) {
-	res.render('account', { user: req.user});
+	res.render('account2', { user: req.user});
 });
 
 app.get('/:id/friends', ensureAuthenticated, function(req, res) {
 	 Friend.find({userOauthID: req.params.id}, function(err, friends) {
-		res.render('friends', {
+		res.render('friends2', {
 		title: 'Your Friends',
 		friends: friends
 		});
