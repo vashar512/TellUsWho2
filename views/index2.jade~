@@ -1,0 +1,131 @@
+extends layout2
+
+body#page-top(data-spy='scroll', data-target='.navbar-fixed-top')
+nav.navbar.navbar-custom.navbar-fixed-top(role='navigation')
+      .container
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-main-collapse')
+            i.fa.fa-bars
+          a.navbar-brand.page-scroll(href='#page-top')
+            i.fa.fa-play-circle
+            span.light TellUsWho
+            | 2
+        .collapse.navbar-collapse.navbar-right.navbar-main-collapse
+          ul.nav.navbar-nav
+            li.hidden
+              a(href='#page-top')
+            li
+              a.page-scroll(href='#about') About
+            li
+              a.page-scroll(href='#survey') Survey
+            li
+              a.page-scroll(href='#', data-toggle='modal', data-target='#login-modal') Log in  |  Sign Up
+    #login-modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+      .modal-dialog
+        .modal-content
+          .modal-header.login_modal_header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h2#myModalLabel.modal-title Login to Your Account
+          .modal-body.login-modal
+            p
+              | Don't have an account yet?
+              a(href='#', data-toggle='modal', data-target='#signup-modal') Sign Up Here
+            br
+            .clearfix
+            #social-icons-conatainer
+              .modal-body-left
+                .form-group
+                  input#username.form-control.login-field(type='text', placeholder='Enter your name', value='')
+                  i.fa.fa-user.login-field-icon
+                .form-group
+                  input#login-pass.form-control.login-field(type='password', placeholder='Password', value='')
+                  i.fa.fa-lock.login-field-icon
+                a.btn.btn-success.modal-login-btn(href='#') Login
+                a.login-link.text-center(href='#') Lost your password?
+              .modal-body-right
+                .modal-social-icons
+                  a.btn.btn-default.facebook(href='/auth/facebook')
+                    i.fa.fa-facebook.modal-icons
+                    | Sign In with Facebook
+                  a.btn.btn-default.twitter(href='/auth/twitter')
+                    i.fa.fa-twitter.modal-icons
+                    | Sign In with Twitter
+                  a.btn.btn-default.google(href='/auth/google')
+                    i.fa.fa-google-plus.modal-icons
+                    | Sign In with Google
+                  a.btn.btn-default.linkedin(href='/auth/linkedin')
+                    i.fa.fa-linkedin.modal-icons
+                    | Sign In with Linkedin
+              #center-line  OR 
+            .clearfix
+            .form-group.modal-register-btn
+              button.btn.btn-default  New User Please Register
+          .clearfix
+          .modal-footer.login_modal_footer
+    header.intro
+        .container
+          .row
+            .col-md-8.col-md-offset-2
+              h1.brand-heading TellUsWho2
+              p.intro-text
+                | Research to understand how people make social connections.
+                br
+                | Start the survey now!
+              a.btn.btn-circle.page-scroll(href='#about')
+                i.fa.fa-angle-double-down.animated
+    section#about.container.content-section.text-center
+      .row
+        .col-lg-8.col-lg-offset-2
+          h2 About our research
+          p
+            | Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
+          p
+            | Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
+    section#download.content-section.text-center
+      .download-section
+        .container
+          .col-lg-8.col-lg-offset-2
+            h2 TellUsWho2 Research
+            p Learn more about our research
+            a.btn.btn-default.btn-lg(href='http://njit.edu') Visit TellUsWho2 Research page
+    section#contact.container.content-section.text-center
+      .row
+        .col-lg-8.col-lg-offset-2
+          h2 Start Survey Now!
+          p Start the survey by signing up using any of the following social networks
+          ul.list-inline.banner-social-buttons
+            li
+              a.btn.btn-default.btn-lg(href='/auth/facebook')
+                i.fa.fa-facebook.fa-fw
+                span.network-name Facebook
+            li
+              a.btn.btn-default.btn-lg(href='/auth/twitter')
+                i.fa.fa-twitter.fa-fw
+                span.network-name Twitter
+            li
+              a.btn.btn-default.btn-lg(href='/auth/github')
+                i.fa.fa-github.fa-fw
+                span.network-name Github
+            li
+              a.btn.btn-default.btn-lg(href='/auth/google')
+                i.fa.fa-google-plus.fa-fw
+                span.network-name Google+
+    footer
+      .container.text-center
+        p Copyright © TellUsWho2 2014
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+    script
+      window.jQuery || document.write('<script src="js/vendor/jquery-1.11.1.min.js"><\\/script>')
+    script(src='/js/plugins.js')
+    script(src='/js/main.js')
+    script(src='/js/vendor/bootstrap.min.js')
+    script(src='/js/vendor/jquery.easing.min.js')
+    script(src='/js/vendor/grayscale.js')
+    script
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='//www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','UA-XXXXX-X','auto');ga('send','pageview');
+

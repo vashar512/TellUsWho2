@@ -1,0 +1,79 @@
+!!! 5
+html.no-js(lang='')
+head
+  meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    title TellUsWho2
+    meta(name='description', content='')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='apple-touch-icon', href='apple-touch-icon.png')
+    link(rel='stylesheet', href='/css/normalize.css')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/grayscale.css')
+    link(rel='stylesheet', href='/css/main.css')
+    link(href='/font-awesome-4.2.0/css/font-awesome.min.css', rel='stylesheet', type='text/css')
+    link(href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic', rel='stylesheet', type='text/css')
+    link(href='http://fonts.googleapis.com/css?family=Montserrat:400,700', rel='stylesheet', type='text/css')
+    script.
+     (src='js/vendor/modernizr-2.8.3.min.js')
+  body#page-top(data-spy='scroll', data-target='.navbar-fixed-top')
+    nav.navbar.navbar-custom.navbar-fixed-top.top-nav-collapse(role='navigation')
+      .container
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-main-collapse')
+            i.fa.fa-bars
+          a.navbar-brand.page-scroll(href='#page-top')
+            i.fa.fa-play-circle
+            span.light TellUsWho
+            | 2
+        .collapse.navbar-collapse.navbar-right.navbar-main-collapse
+          ul.nav.navbar-nav
+            li.hidden
+              a(href='#page-top')
+            li
+              a.page-scroll(href='/') Home
+            li
+              a.page-scroll(href='/' + user + '/friends') Friends
+            li
+              a.page-scroll(href='/accounts') Accounts
+            li
+              a.page-scroll(href='/profile') My Account
+    header.intro
+        .container
+          .row
+            .col-md-8.col-md-offset-2
+              h1.brand-heading Welcome
+              p.intro-text
+                | Keep on adding more friends
+                br
+                | The more the better
+              a.btn.btn-circle.page-scroll(href='#about')
+                i.fa.fa-angle-double-down.animated
+    section#download.content-section.text-center
+      .download-section
+        .container
+          .col-lg-8.col-lg-offset-2
+            h2 Add More Accounts
+            p Keep your contact lists growing
+            a.btn.btn-default.btn-lg(href='/user/account') View your Accounts
+    footer
+      .container.text-center
+        p Copyright © TellUsWho2 2014
+    script.
+     (src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+    script.
+     window.jQuery || document.write('<script src="js/vendor/jquery-1.11.1.min.js"><\\/script>')
+    script.
+     (src='js/plugins.js')
+    script.
+     (src='js/main.js')
+    script.
+     (src='js/vendor/bootstrap.min.js')
+    script.
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='//www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','UA-XXXXX-X','auto');ga('send','pageview');
+
