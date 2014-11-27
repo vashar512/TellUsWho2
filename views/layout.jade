@@ -1,25 +1,19 @@
 !!! 5
-html
-  head
-    title= title
-    meta(charset='utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+html.no-js(lang='')
+head
+  meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    title TellUsWho2
     meta(name='description', content='')
-    meta(name='author', content='')
-    link(href='./css/bootstrap.min.css', rel='stylesheet', media='screen')
-    link(href='./css/main.css', rel='stylesheet', media='screen')
-    link(href='./css/font-awesome.min.css', rel='stylesheet', media='screen')
-    script(src='http://code.jquery.com/jquery.js')
-    script(src='./js/bootstrap.min.js')
-    script(src='./js/main.js')
-  body
-    #wrapper
-      #sidebar-wrapper
-        ul.sidebar-nav
-          li.sidebar-brand
-            a(href='#') Start Bootstrap
-          li
-            a(href='/') Home
-          li
-            a(href='/ping') Ping
-      block content
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='apple-touch-icon', href='apple-touch-icon.png')
+    link(rel='stylesheet', href='./css/normalize.css')
+    link(rel='stylesheet', href='./css/bootstrap.min.css')
+    link(rel='stylesheet', href='./css/grayscale.css')
+    link(rel='stylesheet', href='./css/main.css')
+    link(href='./font-awesome-4.2.0/css/font-awesome.min.css', rel='stylesheet', type='text/css')
+    link(href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic', rel='stylesheet', type='text/css')
+    link(href='http://fonts.googleapis.com/css?family=Montserrat:400,700', rel='stylesheet', type='text/css')
+    script(src='./js/vendor/modernizr-2.8.3.min.js')
+  body#page-top(data-spy='scroll', data-target='.navbar-fixed-top')
+    block content
