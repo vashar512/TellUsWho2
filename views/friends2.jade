@@ -1,14 +1,23 @@
-div
- table.table.table-striped.table-bordered.table-hover
-  thead
-   tr
-    th User Name
-    th Friend Name
-    th Friend Picture
-   tbody
-    each friend, i in friends
-     tr(class=(i % 2 == 0) ? 'odd' : 'even')
-      td= friend.userName
-      td= friend.name
-      td
-       img(src=friend.picture)
+extends layout
+
+block content
+ div
+  table.table.table-striped.table-bordered.table-hover
+   thead
+    tr
+     th User Name
+     th Friend Name
+     th Friend Picture
+    tbody
+     each friend, i in friends
+      tr(class=(i % 2 == 0) ? 'odd' : 'even')
+       td= friend.userName
+       td= friend.name
+       td
+        img(src=friend.picture)
+ script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
+ script(src='./js/plugins.js')
+ script(src='./js/main.js')
+ script(src='./js/vendor/bootstrap.min.js')
+ script(src='./js/vendor/jquery.easing.min.js')
+ script(src='./js/vendor/grayscale.js')
