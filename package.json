@@ -1,14 +1,14 @@
 {
-  "name": "node-bootstrap3-template",
+  "name": "telluswho2",
   "version": "0.0.1",
-  "description": "a template for express, node.js, and twitter bootstrap 3",
+  "description": "telluswho2 social network,
   "main": "app.js",
   "scripts": {
-    "start": "node app.js "
+    "start": "nodejs app.js "
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:mjhea0/node-bootstrap3-template.git"
+    "url": "git@github.com:dg253/TellUsWho2"
   },
   "keywords": [
     "nodejs",
@@ -18,7 +18,7 @@
     "bootstrap",
     "bootstrap3"
   ],
-  "author": "Michael Herman <michael@mherman.org>",
+  "author": "david garcia",
   "license": "MIT",
   "dependencies": {
     "express": "~3.3.4",
