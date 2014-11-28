@@ -138,6 +138,8 @@ app.use(express.session({secret:'dog'}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);
+app.use(require('stylus').middleware(__dirname + '/public'));
+//app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname + '/public'));
 
 // env config
