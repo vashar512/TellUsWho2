@@ -311,6 +311,176 @@ app.get('/logout', function(req, res) {
   req.session.destroy( function (){ res.redirect('/'); });
 });
 
+//test authentication
+function ensureAuthenticated(req, res, next) {
+  if(req.isAuthenticated()) {
+    next();
+  }
+  else { res.redirect('/'); }
+}
+
+function addFriends(FriendsList, index, profile, socialNetwork) {
+        if(socialNetwork == "Facebook") {
+                addFacebookFriends(FriendsList, profile, index);
+        }
+        if(socialNetwork == "Twitter") {
+                addTwitterFriends(FriendsList, profile, index);
+        }
+  if(socialNetwork == "GooglePlus") {
+    addGooglePlusFriends(FriendsList, profile, index);
+  }
+  if(socialNetwork == "LinkedIn") {
+    addLinkedInFriends(FriendsList, profile, index);
+  }
+}
+
+function addFacebookFriends(fbFriendsList, profile, index) {
+        Friend.findOne({name:fbFriendsList.data[index].name, connectionName:primaryAccountName, connectionOauthID: primaryAccountId}, function(err, existingUser) {
+                if(err) { console.log(err); }
+                if(!err && existingUser != null) {
+                        console.log("Existing friend");
+                        //Deduping will happen here
+                } else {
+      var newFriend = new Friend({
+        name : fbFriendsList.data[index].name,
+        primaryPicture: fbFriendsList.data[index].picture.data.url,
+        fbUniqueID : fbFriendsList.data[index].id,
+        fbPicture : fbFriendsList.data[index].picture.data.url,
+        twitterUniqueID: "",
+        twitterPicture: "",
+        googleUniqueID: "",
+        googlePicture: "",
+        linkedinUniqueID: "",
+        connectionName : primaryAccountName,
+        connectionOauthID: primaryAccountId
+        //connectionUsername : profile.displayName
+      }).save(function(err) {
+              if(err) {
+          console.log("Error Saving to DB");
+              } else{
+
+        }
+      });
+    }
+  });
+}
+
+function addTwitterFriends(twitterFriendsList, profile, index) {
+  Friend.findOne({name:twitterFriendsList.users[index].name, connectionName:primaryAccountName, connectionOauthID: primaryAccountId}, function(err, existingUser) {
+    if(err) { console.log(err); }
+    if(!err && existingUser != null) {
+      console.log("Existing Friend");
+    } else {
+      var newFriend = new Friend({
+        name : twitterFriendsList.users[index].name,
+        primaryPicture: twitterFriendsList.users[index].profile_background_image_url,
+        fbUniqueID : "",
+        fbPicture : "",
+        twitterUniqueID : twitterFriendsList.users[index].id,
+        twitterPicture: twitterFriendsList.users[index].profile_background_image_url,
+        googleUniqueID: "",
+        googlePicture: "",
+        linkedinUniqueID: "",
+        connectionName : primaryAccountName,
+        connectionOauthID: primaryAccountId
+        //connectionUsername : profile.displayName
+      }).save(function(err) {
+        if(err) {
+          console.log("Error Saving to DB");
+        }
+      });
+    }
+  });
+}
+
+function addGooglePlusFriends(googlePlusFriendsList, profile, index) {
+  console.log("Google Friends List: " + googlePlusFriendsList);
+        Friend.findOne({name:googlePlusFriendsList.items[index].displayName, connectionName:primaryAccountName, connectionOauthID: primaryAccountId}, function(err, existingUser) {
+                if(err) { console.log(err); }
+                if(!err && existingUser != null) {
+                        console.log("Existing friend");
+                        //Deduping will happen here
+                } else {
+      var newFriend = new Friend({
+        name : googlePlusFriendsList.items[index].displayName,
+        primaryPicture: googlePlusFriendsList.items[index].url,
+        fbUniqueID : "",
+        fbPicture : "",
+        twitterUniqueID: "",
+        twitterPicture: "",
+        googleUniqueID: googlePlusFriendsList.items[index].id,
+        googlePicture: googlePlusFriendsList.items[index].url,
+        linkedinUniqueID: "",
+        connectionName : primaryAccountName,
+        connectionOauthID: primaryAccountId
+      }).save(function(err) {
+              if(err) {
+          console.log("Error Saving to DB");
+              } else{
+
+        }
+      });
+    }
+  });
+}
+
+function addLinkedInFriends(linkedinFriendsList, profile, index) {
+  var linkedinName = linkedinFriendsList.values[index].firstName + ' ' + linkedinFriendsList.values[index].lastName;
+        Friend.findOne({name:linkedinName, connectionName:primaryAccountName, connectionOauthID: primaryAccountId}, function(err, existingUser) {
+                if(err) { console.log(err); }
+                if(!err && existingUser != null) {
+                        console.log("Existing friend");
+                        //Deduping will happen here
+                } else {
+      var newFriend = new Friend({
+        name : linkedinName,
+        fbUniqueID : "",
+        fbPicture : "",
+        twitterUniqueID: "",
+        twitterPicture: "",
+        googleUniqueID: "",
+        googlePicture: "",
+        linkedinUniqueID: linkedinFriendsList.values[index].id,
+        //linkedinPicture: linkedinFriendsList.values[index].picture,
+        connectionName : primaryAccountName,
+        connectionOauthID: primaryAccountId
+      }).save(function(err) {
+              if(err) {
+          console.log("Error Saving to DB" + err);
+              } else{
+
+        }
+      });
+    }
+  });
+}
+
+function checkUser(profile, done) {
+        //Save user and friends in db
+        User.findOne({name:profile.displayName}, function(err, existingUser) {
+                if(err) { console.log(err); }
+                if(!err && existingUser != null){
+      primaryAccountName = existingUser.name;
+      primaryAccountId = existingUser._id;
+                        done(null, existingUser);
+                } else {
+                        var newUser = new User({
+                                oauthID : profile.id,
+                                name : profile.displayName
+                        }).save(function(err){
+                                 if(err) {
+                                        console.log(">>Error saving new user to DB " + err);
+                                } else {
+                                        console.log(">>Successfully added new user");
+                                }
+                        });
+                }
+        });
+}
+
+function signup(req, res) {
+  console.log("SIGNING UP " + req.body.name, req.body.username, req.body.password);
+}
 
 app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'));
