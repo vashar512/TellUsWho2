@@ -258,6 +258,16 @@ app.use(express.session({secret:'dog'}));
 app.use(passport.initialize());
 app.use(passport.session());
 
+// env config
+app.configure('development', function(){
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+
+app.configure('production', function(){
+    app.use(express.errorHandler());
+});
+
+
 app.get('/', function(request, response) {
   response.render('index2', { title: "Start Bootstrap"});
 });
