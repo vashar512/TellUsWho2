@@ -139,6 +139,49 @@ function(accessToken, refreshToken, profile, done) {
 }
 ));
 
+passport.use(new GoogleStrategy({
+        //clientID: config.google.clientID,
+        //clientSecret: config.google.clientSecret,
+        //callbackURL: config.google.callbackURL
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.GOOGLE_CALLBACK_URL
+},
+function(token, refreshToken, profile, done) {
+  var googleReq = https.request({
+    hostname: 'www.googleapis.com',
+    method: 'GET',
+    path: '/plus/v1/people/me/people/visible?access_token=' + token
+  }, function(googleRes) {
+    var output = '';
+    googleRes.setEncoding('utf8');
+    googleRes.on('data', function(chunk) {
+      output += chunk;
+    });
+
+    googleRes.on('end', function() {
+      googlePlusFriendsList = JSON.parse(output);
+      for(friend in googlePlusFriendsList.items) {
+        if(googlePlusFriendsList.items[friend].objectType == "person") {
+          console.log(googlePlusFriendsList.items[friend].displayName + " " + friend);
+          addFriends(googlePlusFriendsList, friend, profile, "GooglePlus");
+        }
+      }
+
+    });
+  });
+
+  googleReq.on('error', function(err) {
+    console.log(">>Error: " + err);
+  });
+
+  googleReq.end();
+
+        process.nextTick(function() {
+                return done(null, profile);
+        });
+}));
+
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 app.use(app.router);
