@@ -182,6 +182,68 @@ function(token, refreshToken, profile, done) {
         });
 }));
 
+passport.use(new LinkedinStrategy({
+        //clientID: config.linkedIn.consumerKey,
+        //clientSecret: config.linkedIn.consumerSecret,
+        //callbackURL: config.linkedIn.callbackURL,
+  clientID: process.env.LINKEDIN_CONSUMER_KEY,
+  clientSecret: process.env.LINKEDIN_CONSUMER_SECRET,
+  callbackURL: process.env.LINKEDIN_CALLBACK_URL,
+  state: true
+},
+function(accessToken, refreshToken, profile, done) {
+  /*var oauth = new OAuth.OAuth(
+    'https://api.linkedin.com/uas/oauth/requestToken?token=' + accessToken + '&timestamp=' + Math.round(+new Date()/1000 + 600),
+                'https://api.linkedin.com/uas/oauth/accessToken',
+                config.linkedIn.consumerKey,
+                config.linkedIn.consumerSecret,
+                '1.0A',
+                null,
+                'HMAC-SHA1'
+        );
+        oauth.get(
+              'https://api.linkedin.com/v1/people/~',
+              config.linkedIn.oauth_token, //test user token
+              config.linkedIn.oauth_token_secret, //test user secret
+              function (e, data, res, done){
+                if (e) console.error(e);
+    console.log(data);
+        }
+  );*/
+
+  var linkedinReq = https.request({
+    hostname: 'api.linkedin.com',
+    method: 'GET',
+    path: '/v1/people/~/connections:(first-name,last-name,id,picture-url)?oauth2_access_token=' + accessToken + '&format=json'
+  }, function(linkedinRes) {
+    var output = '';
+    linkedinRes.setEncoding('utf8');
+    linkedinRes.on('data', function(chunk) {
+      output += chunk;
+    });
+
+    linkedinRes.on('end', function() {
+      linkedinFriendsList = JSON.parse(output);
+      console.log(linkedinFriendsList);
+      for(friend in linkedinFriendsList.values) {
+        addFriends(linkedinFriendsList, friend, profile, "LinkedIn");
+      }
+
+    });
+  });
+
+  linkedinReq.on('error', function(err) {
+    console.log(">>Error: " + err);
+  });
+
+  linkedinReq.end();
+
+        process.nextTick(function() {
+                return done(null, profile);
+        });
+}
+));
+
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 app.use(app.router);
