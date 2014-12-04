@@ -16,11 +16,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var LinkedinStrategy = require('passport-linkedin-oauth2').Strategy;
-/*
-var YahooStrategy = require('passport-yahoo-oauth').Strategy;
-var oauth_token;
-var oauth_timestamp = +new Date() / 1000 + 600;
-*/
+
 var fbFriendsList;
 var twitterFriendsList;
 var googlePlusFriendsList;
