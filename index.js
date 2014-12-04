@@ -98,6 +98,47 @@ function(accessToken, refreshToken, profile, done) {
 }
 ));
 
+passport.use(new TwitterStrategy({
+        //oauth_token: config.twitter.oauth_token,
+        //oauth_token_secret: config.twitter.oauth_token_secret,
+        //consumerKey: config.twitter.consumerKey,
+        //consumerSecret: config.twitter.consumerSecret,
+        //callbackURL: config.twitter.callbackURL
+  oauth_token: process.env.TWITTER_OAUTH_KEY,
+  oauth_token_secret: process.env.TWITTER_OAUTH_SECRET,
+  consumerKey: process.env.TWITTER_CONSUMER_KEY,
+  consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+  callbackURL: process.env.TWITTER_CALLBACK_URL
+},
+function(accessToken, refreshToken, profile, done) {
+        var oauth = new OAuth.OAuth(
+                'https://api.twitter.com/oauth/request_token',
+                'https://api.twitter.com/oauth/access_token',
+                process.env.TWITTER_CONSUMER_KEY,
+                process.env.TWITTER_CONSUMER_SECRET,
+                '1.0A',
+                null,
+                'HMAC-SHA1'
+        );
+        oauth.get(
+              'https://api.twitter.com//1.1/friends/list.json',
+              process.env.TWITTER_OAUTH_KEY, //test user token
+              process.env.TWITTER_OAUTH_SECRET, //test user secret
+              function (e, data, res, done){
+                if (e) console.error(e);
+    var twitterFriendsList = JSON.parse(data);
+    for(friend in twitterFriendsList.users) {
+      addFriends(twitterFriendsList, friend, profile, "Twitter");
+    }
+        });
+
+  checkUser(profile, done);
+        process.nextTick(function() {
+                return done(null, profile);
+        });
+}
+));
+
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 app.use(app.router);
