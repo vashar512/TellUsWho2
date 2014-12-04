@@ -267,10 +267,50 @@ app.configure('production', function(){
     app.use(express.errorHandler());
 });
 
-
-app.get('/', function(request, response) {
-  response.render('index2', { title: "Start Bootstrap"});
+// routes
+app.get('/', routes.index);
+app.get('/ping', routes.ping);
+app.get('/signup', function(req, res) {signup(req, res);})
+app.get('/account', ensureAuthenticated, function(req, res) {
+  res.render('account2', { user: req.user });
 });
+app.get('/:id/friends', ensureAuthenticated, function(req, res) {
+   Friend.find({connectionOauthID: primaryAccountId/*req.params.id*/}, function(err, friends) {
+    res.render('friends2', {
+    title: 'Your Friends',
+    friends: friends
+    });
+  });
+});
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['user_friends']}), function(req, res){});
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), function(req, res){
+  res.redirect('/account');
+});
+app.get('/auth/twitter', passport.authenticate('twitter'), function(req, res){});
+app.get('/auth/twitter/callback', passport.authenticate('twitter',{ failureRedirect: '/' }), function(req, res){
+        res.redirect('/account');
+});
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email', 'https://www.googleapis.com/auth/plus.login'] }), function(req, res){});
+app.get('/auth/google/callback', passport.authenticate('google',{ failureRedirect: '/' }), function(req, res){
+        res.redirect('/account');
+});
+app.get('/auth/linkedin', passport.authenticate('linkedin', { scope: ['r_fullprofile', 'r_emailaddress', 'r_contactinfo', 'r_network'] }), function(req, res){});
+app.get('/auth/linkedin/callback', passport.authenticate('linkedin',{ failureRedirect: '/' }), function(req, res){
+        res.redirect('/account');
+});
+/*
+app.get('/auth/yahoo', passport.authenticate('yahoo'), function(req, res){
+  getYahooOauthVerifier(req, res);
+});
+app.get('/auth/yahoo/callback', passport.authenticate('yahoo',{ failureRedirect: '/' }), function(req, res){
+        res.redirect('/account');
+});
+*/
+app.get('/logout', function(req, res) {
+  req.logout();
+  req.session.destroy( function (){ res.redirect('/'); });
+});
+
 
 app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'));
