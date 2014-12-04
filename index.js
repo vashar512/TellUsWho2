@@ -32,7 +32,7 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
-mongoose.connect(process.env.MONGOLAB_URI);
+mongoose.connect(process.env.MONGOLAB_URI + '/test');
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
