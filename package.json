@@ -1,25 +1,35 @@
 {
-  "name": "node-js-getting-started",
-  "version": "0.1.2",
-  "description": "A sample Node.js app using Express 4",
-  "main": "index.js",
+  "name": "telluswho2",
+  "version": "0.0.1",
+  "description": "telluswho2 social network",
   "scripts": {
     "start": "node index.js"
   },
-  "dependencies": {
-    "express": "~4.9.x"
-  },
-  "engines": {
-    "node": "0.10.x"
-  },
+  "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/heroku/node-js-getting-started"
+    "url": "git@github.com:dg253/TellUsWho2"
   },
   "keywords": [
-    "node",
-    "heroku",
-    "express"
+    "nodejs",
+    "express",
+    "template",
+    "twitter",
+    "bootstrap",
+    "bootstrap3"
   ],
-  "license": "MIT"
+  "author": "david garcia",
+  "dependencies": {
+    "express": "~3.3.4",
+    "jade": "~0.34.1",
+    "mongodb": "~1.3.19",
+    "mongoose": "~3.8.1",
+    "oauth": "~0.9.12",
+    "passport": "^0.2.1",
+    "passport-facebook": "^1.0.3",
+    "passport-google-oauth": "^0.1.5",
+    "passport-linkedin-oauth2": "^1.2.1",
+    "passport-twitter": "^1.0.2",
+    "stylus": "*"
+  }
 }
