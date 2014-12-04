@@ -1,0 +1,49 @@
+extends layout
+
+block content
+    nav.navbar.navbar-custom.navbar-fixed-top.top-nav-collapse(role='navigation')
+      .container
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-main-collapse')
+            i.fa.fa-bars
+          a.navbar-brand.page-scroll(href='#page-top')
+            i.fa.fa-play-circle
+            span.light TellUsWho
+            | 2
+        .collapse.navbar-collapse.navbar-right.navbar-main-collapse
+          ul.nav.navbar-nav
+            li.hidden
+              a(href='#page-top')
+            li
+              a.page-scroll(href='/') Home
+            li
+              a.page-scroll(href='/' + user + '/friends') Friends
+            li
+              a.page-scroll(href='/accounts') Accounts
+            li
+              a.page-scroll(href='/profile') My Account
+    header.intro
+        .container
+          .row
+            .col-md-8.col-md-offset-2
+              h1.brand-heading Welcome
+              p.intro-text
+                | Keep on adding more friends
+                br
+                | The more the better
+              a.btn.btn-circle.page-scroll(href='#about')
+                i.fa.fa-angle-double-down.animated
+    section#download.content-section.text-center
+      .download-section
+        .container
+          .col-lg-8.col-lg-offset-2
+            h2 Add More Accounts
+            p Keep your contact lists growing
+            a.btn.btn-default.btn-lg(href='/' + user + '/friends') View Your Friends
+    footer
+      .container.text-center
+        p Copyright © TellUsWho2 2014
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
+    script(src='./js/plugins.js')
+    script(src='./js/main.js')
+    script(src='./js/vendor/bootstrap.min.js')
