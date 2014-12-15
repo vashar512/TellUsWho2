@@ -245,8 +245,8 @@ function(accessToken, refreshToken, profile, done) {
 ));
 
 app.set('port', (process.env.PORT || 5000));
-app.use(express.static(__dirname + '/public'));
-app.use(app.router);
+//app.use(express.static(__dirname + '/public'));
+//app.use(app.router);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.logger());
@@ -257,6 +257,8 @@ app.use(express.methodOverride());
 app.use(express.session({secret:'dog'}));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(app.router);
+app.use(express.static(__dirname + '/public'));
 
 // env config
 app.configure('development', function(){
