@@ -1,7 +1,7 @@
 {
   "name": "telluswho2",
   "version": "0.0.1",
-  "description": "telluswho2 social network",
+  "description": "telluswho2 social network njit",
   "scripts": {
     "start": "node index.js"
   },
