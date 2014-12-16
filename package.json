@@ -18,7 +18,7 @@
     "bootstrap",
     "bootstrap3"
   ],
-  "author": "david garcia",
+  "author": "david, Vishal, Anish, Nicole, Mike",
   "dependencies": {
     "express": "~3.3.4",
     "jade": "~0.34.1",
