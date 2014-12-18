@@ -24,6 +24,7 @@
     "jade": "~0.34.1",
     "mongodb": "^1.4.22",
     "mongoose": "^3.8.20",
+    "node-schema-object": "^0.9.2",
     "oauth": "^0.9.12",
     "passport": "^0.2.1",
     "passport-facebook": "^1.0.3",

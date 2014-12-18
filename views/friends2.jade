@@ -5,16 +5,24 @@ block content
   table.table.table-striped.table-bordered.table-hover
    thead
     tr
-     th User Name
      th Friend Name
      th Friend Picture
+     th Friend Accounts
     tbody
      each friend, i in friends
       tr(class=(i % 2 == 0) ? 'odd' : 'even')
-       td= friend.connectionName
        td= friend.name
        td
-        img(src=friend.fbPicture)
+        img(src=friend.primaryPicture)
+       td
+        if friend.fbUniqueID !== ""
+          p "Facebook"
+        if friend.googleUniqueID !== ""
+          p "Google"      
+        if friend.twitterUniqueID !== ""
+          p "Twitter"   
+        if friend.linkedinUniqueID !== ""
+          p "LinkedIn"
  script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
  script(src='./js/plugins.js')
  script(src='./js/main.js')
