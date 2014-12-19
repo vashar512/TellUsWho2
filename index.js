@@ -30,7 +30,7 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
-mongoose.connect('mongodb://localhost/passport-example');
+mongoose.connect(process.env.MONGOLAB_URI);
 
 var Friend = mongoose.model('Friend', {
   name: String,
