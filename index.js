@@ -32,7 +32,7 @@ passport.deserializeUser(function(obj, done) {
 
 mongoose.connect('mongodb://localhost/passport-example');
 
-var Friend = /*new SchemaObject*/mongoose.model('Friend', {
+var Friend = mongoose.model('Friend', {
   name: String,
   primaryPicture: String,
   fbUniqueID: String,
@@ -519,52 +519,7 @@ function addLinkedinFriends(linkedinFriendsList, profile, index) {
   });
 }
 
-function addLinkedInFriends(linkedinFriendsList, profile, index) {
-  var linkedinName = linkedinFriendsList.values[index].firstName + ' ' + linkedinFriendsList.values[index].lastName;
-        Friend.findOne({name:linkedinName, connectionName:primaryAccountName, connectionOauthID: primaryAccountId}, function(err, existingUser) {
-                if(err) { console.log(err); }
-                if(!err && existingUser != null) {
-                        console.log("Existing friend");
-                        //Deduping will happen here
-                } else {
-      var newFriend = new Friend({
-        name : linkedinName,
-        fbUniqueID : "",
-        fbPicture : "",
-        twitterUniqueID: "",
-        twitterPicture: "",
-        googleUniqueID: "",
-        googlePicture: "",
-        linkedinUniqueID: linkedinFriendsList.values[index].id,
-        //linkedinPicture: linkedinFriendsList.values[index].picture,
-        connectionName : primaryAccountName,
-        connectionOauthID: primaryAccountId
-      }).save(function(err) {
-              if(err) {
-          console.log("Error Saving to DB" + err);
-              } else{
-
-        }
-      });
-    }
-  });
-}
-
 app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'));
 });
 
-  /*User.findOne({name: profile.displayName, username: profile.emails[0].value}, function(err, existingUser) {
-    for(friend in existingUser.friends.toObject()) {
-      console.log(friend);
-      if(existingUser.friends[friend].name) {
-        //console.log(existingUser.friends[friend].name);
-        var existingFriend = existingUser.friends[friend];
-        console.log(existingFriend);
-        existingUser.friends.unshift(existingFriend);
-        console.log(existingUser.friends.indexOf(existingFriend));
-        //existingFriend.fbUniqueID = "Test";
-        //console.log(existingFriend.fbUniqueID);
-      } 
-    }
-  });*/
